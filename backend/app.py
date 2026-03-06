@@ -15,6 +15,13 @@ os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 # Get configuration from environment variables
 PORT = int(os.environ.get('PORT', 5000))
 HOST = os.environ.get('HOST', '0.0.0.0')
+COOKIE_FILE = "/tmp/youtube_cookies.txt"
+
+cookie_content = os.environ.get("YT_COOKIE_CONTENT")
+
+if cookie_content:
+    with open(COOKIE_FILE, "w") as f:
+        f.write(cookie_content)
 
 # Store download progress
 download_progress = {}
@@ -25,7 +32,7 @@ def get_video_info(url):
         ydl_opts = {
             'quiet': True,
             'no_warnings': True,
-
+            'cookiefile': COOKIE_FILE,
             # Reduce bot detection
             'extractor_args': {
                 'youtube': {
@@ -136,7 +143,7 @@ def download():
             'format': format_selection,
             'outtmpl': output_template,
             'progress_hooks': [progress_hook],
-
+            'cookiefile': COOKIE_FILE,
             # yt-dlp stability
             'retries': 10,
             'fragment_retries': 10,
