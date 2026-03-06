@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file, render_template_string
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import yt_dlp
 import os
@@ -116,18 +116,16 @@ def download():
             
             output_template = os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s')
         
+        # Build basic options
         ydl_opts = {
             'format': format_selection,
             'outtmpl': output_template,
             'progress_hooks': [progress_hook],
             'quiet': False,
             'no_warnings': False,
-            'postprocessors': [] if audio_only else [{
-                'key': 'FFmpegVideoConvertor',
-                'prefixopts': ['-c:v', 'libx264'],
-            }],
         }
         
+        # audio-only postprocessor configuration
         if audio_only:
             ydl_opts['postprocessors'] = [{
                 'key': 'FFmpegExtractAudio',
