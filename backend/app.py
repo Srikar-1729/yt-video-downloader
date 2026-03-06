@@ -25,6 +25,21 @@ def get_video_info(url):
         ydl_opts = {
             'quiet': True,
             'no_warnings': True,
+
+            # Reduce bot detection
+            'extractor_args': {
+                'youtube': {
+                    'player_client': ['android']
+                }
+            },
+
+            'sleep_interval': 2,
+            'retries': 10,
+            'fragment_retries': 10,
+
+            'http_headers': {
+                'User-Agent': 'Mozilla/5.0 (Linux; Android 10; Mobile)'
+            }
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
@@ -121,6 +136,24 @@ def download():
             'format': format_selection,
             'outtmpl': output_template,
             'progress_hooks': [progress_hook],
+
+            # yt-dlp stability
+            'retries': 10,
+            'fragment_retries': 10,
+            'sleep_interval': 2,
+
+            # reduce bot detection
+            'extractor_args': {
+                'youtube': {
+                    'player_client': ['android']
+                }
+            },
+
+            # realistic browser headers
+            'http_headers': {
+                'User-Agent': 'Mozilla/5.0 (Linux; Android 10; Mobile)'
+            },
+
             'quiet': False,
             'no_warnings': False,
         }
